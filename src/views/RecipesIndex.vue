@@ -12,8 +12,48 @@
                 <li v-for="ingredient in recipe.formatted.ingredients">{{ ingredient }}</li>
               </ul>
             </div>
-            <div>
-              <router-link class="btn btn-primary" v-bind:to="'/recipes/' + recipe.id">More Info</router-link>
+
+        <button @click="setCurrentRecipe(recipe)" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+          Launch demo modal
+        </button>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{ currentRecipe.title }}</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <ul>
+                <h5>By: {{ currentRecipe.chef }}</h5>
+                <h4>Prep Time: {{ currentRecipe.formatted.prep_time }}</h4>
+
+                <h4>Ingredients</h4>
+                <ul>
+                  <li v-for="ingredient in currentRecipe.formatted.ingredients">
+                    {{ingredient}}
+                  </li>
+                </ul>
+                <h4>Directions</h4>
+                <ol>
+                  <li v-for="direction in currentRecipe.formatted.directions">
+                    {{direction}}
+                  </li>
+                </ol>
+
+                <img class="img-thumbnail" v-bind:src="currentRecipe.image_url" v-bind:alt="currentRecipe.name">
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
             </div>
           </div>
         </div>
@@ -31,7 +71,10 @@ var axios = require('axios');
 export default {
   data: function() {
     return {
-      recipes: []
+      recipes: [],
+      currentRecipe: {
+        formatted: {}
+      }
     };
   },
   created: function() {
@@ -41,7 +84,11 @@ export default {
       this.recipes = response.data;
     }.bind(this));
   },
-  methods: {},
+  methods: {
+    setCurrentRecipe: function(inputRecipe) {
+      this.currentRecipe = inputRecipe;
+    }
+  },
   computed: {}
 };
 </script>
